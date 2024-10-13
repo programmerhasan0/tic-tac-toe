@@ -1,31 +1,26 @@
-import { useState } from "react";
 import Square from "./Square";
 import calculateWinner from "../utils/calculateWinner";
+import PropTypes from "prop-types";
 
-const Board = () => {
-    const [xisNext, setXIsNext] = useState(true);
-    const [squares, setSquares] = useState(Array(9).fill(null));
-
+const Board = ({ xIsNext, squares, onPlay }) => {
     const handleClick = i => {
         if (squares[i] || calculateWinner(squares)) {
             return;
         }
-
         const nextSquares = squares.slice();
-        if (xisNext) {
+        if (xIsNext) {
             nextSquares[i] = "X";
         } else {
             nextSquares[i] = "O";
         }
-        setSquares(nextSquares);
-        setXIsNext(!xisNext);
+        onPlay(nextSquares);
     };
 
     // * Declearning the winner
     const winner = calculateWinner(squares);
     let status;
     if (winner) status = `Winner is : ${winner}`;
-    else status = `Next Move goes to : ${xisNext ? "X" : "O"}`;
+    else status = `Next Move goes to : ${xIsNext ? "X" : "O"}`;
 
     return (
         <div>
@@ -74,6 +69,12 @@ const Board = () => {
             </div>
         </div>
     );
+};
+
+Board.propTypes = {
+    xIsNext: PropTypes.bool,
+    squares: PropTypes.array,
+    onPlay: PropTypes.func,
 };
 
 export default Board;
